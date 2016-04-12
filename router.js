@@ -1,5 +1,4 @@
 var express = require('express');
-var validator = require('email-validator');
 var fs = require('fs');
 var router = express.Router();
 
@@ -14,7 +13,11 @@ router.get('/latest', function (req, res) {
 });
 
 router.get('/', function (req, res) {
-  res.send('Home page');
+  console.log('GET');
+
+  res.render('home.ejs');
+
+  // res.send('home page');
 });
 
 router.post('/upload', function (req, res) {
