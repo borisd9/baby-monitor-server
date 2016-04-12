@@ -13,10 +13,7 @@ var myLogger = function (req, res, next) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// Log requests if IS_DEBUG is not empty
-console.log('env var ' + process.env.IS_DEBUG);
-if (process.env.IS_DEBUG)
-  app.use(myLogger);
+app.use(myLogger);
 
 app.use(router);
 
