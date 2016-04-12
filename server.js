@@ -2,6 +2,7 @@ var express = require('express');
 var router = require('./router.js');
 var bodyParser = require('body-parser');
 var app = express();
+var port = process.env.port || 1337;
 
 var myLogger = function (req, res, next) {
   var UTCstring = (new Date()).toUTCString();
@@ -17,4 +18,4 @@ app.use(myLogger);
 
 app.use(router);
 
-app.listen(3000);
+app.listen(port);
