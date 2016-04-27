@@ -10,9 +10,6 @@ var myLogger = function (req, res, next) {
   next();
 };
 
-// Setup port
-// app.set('port', (process.env.PORT || 5000));
-
 // // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -21,15 +18,14 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-console.log('blah');
-
 // Parse JSON requests
 app.use(bodyParser.json());
 
 app.use(myLogger);
 app.use(router);
 
+// Setup port
 var port = process.env.PORT || 5000;
 
 app.listen(port);
-console.log('listening on ' + port);
+console.log('Server listening on ' + port);
