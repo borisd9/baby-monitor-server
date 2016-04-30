@@ -94,10 +94,10 @@ router.post('/upload', function (req, res) {
       }
     });
 
-    busboy.on('error', function () {
+    busboy.on('error', function (data) {
       error = true;
-      console.log('inside busboy error handler');
-      res.send('got an error');
+      console.log('inside busboy error handler ' + data);
+      res.send('got an error inside busboy error handler');
     });
 
     req.pipe(busboy);
