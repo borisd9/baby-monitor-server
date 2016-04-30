@@ -17,8 +17,8 @@ router.get('/latest', function (req, res) {
   fs.readFile(__dirname + '/images/' + files[0], function (err, data) {
     if (err) throw err; // Fail if the file can't be read.
     res.writeHead(200, {
-        'Content-Type': 'image/jpeg',
-      });
+      'Content-Type': 'image/jpeg',
+    });
     res.end(data); // Send the file data to the browser.
   });
 });
@@ -34,12 +34,15 @@ router.get('/', function (req, res) {
 // Get data from the form
 router.post('/upload', function (req, res) {
 
-  // parse req
-  var busboy = new Busboy({ headers: req.headers });
-  var uploadedFile = false;
+  try {
+    // parse req
+    var busboy = new Busboy({
+      headers: req.headers,
+    });
+    var uploadedFile = false;
 
-  // handle file upload
-  busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+    // handle file upload
+    busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
       console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
 
       // Remove old file
@@ -64,22 +67,26 @@ router.post('/upload', function (req, res) {
       });
     });
 
-  // handle field upload
-  busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
+    // handle field upload
+    busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
       console.log('Field [' + fieldname + ']: value: ' + inspect(val));
     });
 
-  // Finsihed parsing the form
-  busboy.on('finish', function () {
+    // Finsihed parsing the form
+    busboy.on('finish', function () {
       console.log('Done parsing form!');
 
       if (!uploadedFile)
-        res.send('no file provided on request');
+          res.send('no file provided on request');
       else
-        res.send('done uploading files');
+          res.send('done uploading files');
     });
 
-  req.pipe(busboy);
+    req.pipe(busboy);
+  } catch (e) {
+    console.log('caught error ' + e);
+    res.send('caught error ' + e);
+  }
 });
 
 module.exports = router;
