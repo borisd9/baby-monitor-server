@@ -31,7 +31,7 @@ router.get('/', function (req, res) {
 
 // Get data from the form
 router.post('/upload', function (req, res) {
-
+  var error = false;
   try {
     console.log('inside try catch');
 
@@ -63,6 +63,7 @@ router.post('/upload', function (req, res) {
 
       var fstream = fs.createWriteStream(saveTo);
       fstream.on('error', function (err) {
+        error = true;
         console.log('ERROR Stream:' + err);
         file.unpipe();
         fstream.end();
@@ -85,13 +86,16 @@ router.post('/upload', function (req, res) {
     busboy.on('finish', function () {
       console.log('Done parsing form!');
 
-      if (!uploadedFile)
-          res.send('no file provided on request');
-      else
-          res.send('done uploading files');
+      if (!error) {
+        if (!uploadedFile)
+            res.send('no file provided on request');
+        else
+            res.send('done uploading files');
+      }
     });
 
     busboy.on('error', function () {
+      error = true;
       console.log('inside busboy error handler');
       res.send('got an error');
     });
@@ -100,7 +104,6 @@ router.post('/upload', function (req, res) {
 
   } catch (e) {
     console.log('caught error ' + e);
-    res.send('caught error ' + e);
   }
 });
 
