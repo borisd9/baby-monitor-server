@@ -4,6 +4,7 @@
   "description": "motion tracking for infant via Eulerian Magnification algo",
   "main": "server.js",
   "dependencies": {
+    "express": "^4.0.0",
     "busboy": "^0.2.13",
     "del": "^2.2.0",
     "dns": "^0.2.2",
