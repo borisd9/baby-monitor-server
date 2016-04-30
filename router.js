@@ -53,13 +53,22 @@ router.post('/upload', function (req, res) {
         throw 'error';
       }
 
-      fs.unlinkSync(__dirname + '/images/' + files[0]);
+      if (files.length == 1)
+        fs.unlinkSync(__dirname + '/images/' + files[0]);
 
       console.log('removed old files');
 
       // Save file to /images path
       var saveTo = path.join(__dirname + '/images', path.basename(filename));
-      file.pipe(fs.createWriteStream(saveTo));
+
+      var fstream = fs.createWriteStream(saveTo);
+      fstream.on('error', function (err) {
+        console.log('ERROR Stream:' + err);
+        file.unpipe();
+        fstream.end();
+      });
+
+      file.pipe(fstream);
 
       file.on('end', function () {
         console.log('File [' + fieldname + '] Finished');
