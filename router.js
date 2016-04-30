@@ -27,14 +27,14 @@ router.get('/', function (req, res) {
   console.log('GET');
 
   res.render('home.ejs');
-
-  // res.send('home page');
 });
 
 // Get data from the form
 router.post('/upload', function (req, res) {
 
   try {
+    console.log('inside try catch');
+
     // parse req
     var busboy = new Busboy({
       headers: req.headers,
@@ -83,6 +83,7 @@ router.post('/upload', function (req, res) {
     });
 
     req.pipe(busboy);
+
   } catch (e) {
     console.log('caught error ' + e);
     res.send('caught error ' + e);
