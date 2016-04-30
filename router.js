@@ -7,7 +7,14 @@ var os = require('os');
 var router = express.Router();
 
 router.get('/latest', function (req, res) {
-  fs.readFile('images/672.jpg', function (err, data) {
+  var files = fs.readdirSync(__dirname + '/images');
+
+  if (files.length > 1) {
+    console.log('error with number of files in /images');
+    throw 'error';
+  }
+
+  fs.readFile(__dirname + '/images/' + files[0], function (err, data) {
     if (err) throw err; // Fail if the file can't be read.
     res.writeHead(200, {
         'Content-Type': 'image/jpeg',
@@ -29,6 +36,7 @@ router.post('/upload', function (req, res) {
 
   // parse req
   var busboy = new Busboy({ headers: req.headers });
+  var uploadedFile = false;
 
   // handle file upload
   busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
@@ -52,6 +60,7 @@ router.post('/upload', function (req, res) {
 
       file.on('end', function () {
         console.log('File [' + fieldname + '] Finished');
+        uploadedFile = true;
       });
     });
 
@@ -64,9 +73,10 @@ router.post('/upload', function (req, res) {
   busboy.on('finish', function () {
       console.log('Done parsing form!');
 
-      // res.writeHead(303, { Connection: 'close', Location: '/' });
-      // res.end();
-      res.send('done uploading files');
+      if (!uploadedFile)
+        res.send('no file provided on request');
+      else
+        res.send('done uploading files');
     });
 
   req.pipe(busboy);
