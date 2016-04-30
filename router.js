@@ -82,6 +82,11 @@ router.post('/upload', function (req, res) {
           res.send('done uploading files');
     });
 
+    busboy.on('error', function () {
+      console.log('inside busboy error handler');
+      res.send('got an error');
+    });
+
     req.pipe(busboy);
 
   } catch (e) {
