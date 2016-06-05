@@ -6,6 +6,17 @@ var path = require('path');
 var os = require('os');
 var router = express.Router();
 
+// data json obj
+var data = {};
+var dataChanged = false;
+
+router.get('/', function (req, res) {
+  console.log('GET');
+
+  res.render('home.ejs');
+});
+
+// Get latest snapshot from the server
 router.get('/latest', function (req, res) {
   var files = fs.readdirSync(__dirname + '/images');
 
@@ -23,17 +34,23 @@ router.get('/latest', function (req, res) {
   });
 });
 
-router.get('/', function (req, res) {
-  console.log('GET');
+// Get latest data from the server
+router.get('/data', function (req, res) {
+  if (dataChanged) {
+    setTimeout(function () {
+      dataChanged = false;
+    }, 4000);
 
-  res.render('home.ejs');
+    res.send(data);
+  } else
+    res.send('no change');
 });
 
 // Get data from the form
 router.post('/upload', function (req, res) {
   var error = false;
+
   try {
-    console.log('inside try catch');
 
     // parse req
     var busboy = new Busboy({
@@ -79,24 +96,29 @@ router.post('/upload', function (req, res) {
 
     // handle field upload
     busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
-      console.log('Field [' + fieldname + ']: value: ' + inspect(val));
+      console.log('Got Field [' + fieldname + ']: value: ' + inspect(val));
+      data[fieldname] = inspect(val);
     });
 
-    // Finsihed parsing the form
+    // Finished parsing the form
     busboy.on('finish', function () {
       console.log('Done parsing form!');
 
       if (!error) {
         if (!uploadedFile)
-            res.send('no file provided on request');
-        else
-            res.send('done uploading files');
+          res.send('no file provided on request!');
+        else if (!data.bpm || !data.motion)
+          res.send('no data fields provided on request!');
+        else {
+          dataChanged = true;
+          res.send('done uploading files');
+        }
       }
     });
 
     busboy.on('error', function (data) {
       error = true;
-      console.log('inside busboy error handler ' + data);
+      console.log('inside busboy error handler: ' + data);
       res.send('got an error inside busboy error handler');
     });
 
