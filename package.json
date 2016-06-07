@@ -1,7 +1,7 @@
 {
-  "name": "infanteulerian",
+  "name": "baby-monitor-server",
   "version": "0.0.1",
-  "description": "motion tracking for infant via Eulerian Magnification algo",
+  "description": "",
   "main": "server.js",
   "dependencies": {
     "express": "^4.0.0",
@@ -27,5 +27,9 @@
     "url": "git+https://github.com/borisd9/baby-monitor-server.git"
   },
   "author": "Boris D",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/borisd9/baby-monitor-server/issues"
+  },
+  "homepage": "https://github.com/borisd9/baby-monitor-server#readme"
 }
