@@ -24,9 +24,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://borisd9@bitbucket.org/borisd9/infanteulerian.git"
+    "url": "git+https://github.com/borisd9/baby-monitor-server.git"
   },
   "author": "Boris D",
-  "license": "MIT",
-  "homepage": "https://bitbucket.org/borisd9/infanteulerian#readme"
+  "license": "MIT"
 }
