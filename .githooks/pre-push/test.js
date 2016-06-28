@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # Sometimes it's better to not allow users to make force pushes to some branches.
